@@ -53,3 +53,12 @@ func GetLongURL(code string) (string, error) {
 
 	return url.LongURL, nil
 }
+
+// get analytics based on clicks
+func GetAnalytics(code string) (int, error) {
+	url, err := repository.FindURL(code)
+	if err != nil {
+		return 0, err
+	}
+	return url.Clicks, nil
+}

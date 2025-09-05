@@ -9,7 +9,10 @@ import (
 func main() {
 	r := gin.Default()
 	r.POST("/shorten", controllers.ShortenURL)
-	r.GET("/:code", controllers.Redirect)
+	r.GET("/Bitly-lite/:code", controllers.Redirect)
+	r.GET("/analytics/:code", controllers.GetAnalytics)
+	r.GET("/analytics/:code/events", controllers.GetEvents)
+
 
 	r.Run(":8080")
 }

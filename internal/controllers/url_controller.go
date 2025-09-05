@@ -2,6 +2,9 @@ package controllers
 
 import (
 	"net/http"
+	"time"
+	"url-shortener/internal/models"
+	"url-shortener/internal/repository"
 	"url-shortener/internal/services"
 
 	"github.com/gin-gonic/gin"
@@ -38,5 +41,44 @@ func Redirect(c *gin.Context) {
 		return
 	}
 
+	// collect Analytics
+	event := models.ClickEvent{
+		URLID: code,
+		Referrer: c.Request.Referer(),
+		IP: c.ClientIP(),
+		UserAgent: c.Request.UserAgent(),
+		Country: c.GetHeader("X-Country"),
+		Timestamp:  time.Now(),
+	}
+
+	// save event
+	repository.SaveEvent(event)
+
 	c.Redirect(http.StatusMovedPermanently, longUrl)
+}
+
+func GetAnalytics(c *gin.Context) {
+	code := c.Param("code")
+
+	clicks, err := services.GetAnalytics(code)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "URL not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"shortCode": code,
+		"clicks":    clicks,
+	})
+}
+
+func GetEvents(c *gin.Context) {
+	code := c.Param("code")
+
+	events := repository.GetEvents(code)
+
+	c.JSON(http.StatusOK, gin.H{
+		"shortCode": code,
+		"events":    events,
+	})
 }
