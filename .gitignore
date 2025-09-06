@@ -1,0 +1,43 @@
+# Binaries
+/bin/
+/build/
+/dist/
+/tmp/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go build cache
+*.test
+*.out
+*.log
+*.db
+
+# Go modules
+vendor/
+
+# Dependency directories (node, python, etc. if ever added)
+node_modules/
+__pycache__/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Swagger docs generated
+/docs/*
+!docs/swagger.json
+!docs/swagger.yaml
+
+# Env files (keep secrets safe!)
+.env
+.env.local
+.env.*

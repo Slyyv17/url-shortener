@@ -10,6 +10,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ShortenURL godoc
+// @Summary      Shorten a URL
+// @Description  Takes a long URL and returns a shortened version
+// @Tags         shorten
+// @Accept       json
+// @Produce      json
+// @Param        request body models.ShortenRequest true "Shorten request"
+// @Success      200 {object} models.ShortenResponse
+// @Failure      400 {object} map[string]string
+// @Failure      500 {object} map[string]string
+// @Router       /shorten [post]
 func ShortenURL(c *gin.Context) {
 	var body struct {
 		LongURL string `json:"long_url" binding:"required"`
@@ -32,6 +43,14 @@ func ShortenURL(c *gin.Context) {
 	})
 }
 
+// Redirect godoc
+// @Summary      Redirect shortened URL
+// @Description  Redirects to the original long URL using the short code
+// @Tags         redirect
+// @Param        code path string true "Short code"
+// @Success      301 {string} string "Redirected to original URL"
+// @Failure      404 {object} map[string]string
+// @Router       /{code} [get]
 func Redirect(c *gin.Context) {
 	code := c.Param("code")
 
@@ -57,6 +76,15 @@ func Redirect(c *gin.Context) {
 	c.Redirect(http.StatusMovedPermanently, longUrl)
 }
 
+// GetAnalytics godoc
+// @Summary Get click count for a short URL
+// @Description Returns the number of times a short URL has been accessed
+// @Tags analytics
+// @Produce json
+// @Param code path string true "Short code"
+// @Success 200 {object} map[string]interface{}
+// @Failure 404 {object} map[string]string
+// @Router /analytics/{code} [get]
 func GetAnalytics(c *gin.Context) {
 	code := c.Param("code")
 
@@ -72,6 +100,14 @@ func GetAnalytics(c *gin.Context) {
 	})
 }
 
+// GetEvents godoc
+// @Summary Get detailed analytics events
+// @Description Returns detailed analytics including referrer, IP, user-agent, and timestamp
+// @Tags analytics
+// @Produce json
+// @Param code path string true "Short code"
+// @Success 200 {object} map[string]interface{}
+// @Router /analytics/{code}/events [get]
 func GetEvents(c *gin.Context) {
 	code := c.Param("code")
 

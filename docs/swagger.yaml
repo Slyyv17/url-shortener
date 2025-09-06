@@ -1,0 +1,131 @@
+basePath: /
+definitions:
+  models.ShortenRequest:
+    properties:
+      long_url:
+        example: https://www.google.com/
+        type: string
+    required:
+    - long_url
+    type: object
+  models.ShortenResponse:
+    properties:
+      clicks:
+        example: 0
+        type: integer
+      short_url:
+        example: http://localhost:8080/abc123
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: A simple URL shortener with analytics built using Gin.
+  title: Bitly-lite URL Shortener API
+  version: "1.0"
+paths:
+  /{code}:
+    get:
+      description: Redirects to the original long URL using the short code
+      parameters:
+      - description: Short code
+        in: path
+        name: code
+        required: true
+        type: string
+      responses:
+        "301":
+          description: Redirected to original URL
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Redirect shortened URL
+      tags:
+      - redirect
+  /analytics/{code}:
+    get:
+      description: Returns the number of times a short URL has been accessed
+      parameters:
+      - description: Short code
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get click count for a short URL
+      tags:
+      - analytics
+  /analytics/{code}/events:
+    get:
+      description: Returns detailed analytics including referrer, IP, user-agent,
+        and timestamp
+      parameters:
+      - description: Short code
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get detailed analytics events
+      tags:
+      - analytics
+  /shorten:
+    post:
+      consumes:
+      - application/json
+      description: Takes a long URL and returns a shortened version
+      parameters:
+      - description: Shorten request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.ShortenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ShortenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Shorten a URL
+      tags:
+      - shorten
+swagger: "2.0"

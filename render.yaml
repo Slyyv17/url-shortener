@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: url-shortener
+    runtime: go
+    plan: free
+    autoDeploy: true
+    buildCommand: go build -o main .
+    startCommand: ./main
+    envVars:
+      - key: PORT
+        value: 8080
