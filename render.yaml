@@ -4,7 +4,7 @@ services:
     runtime: go
     plan: free
     autoDeploy: true
-    buildCommand: go build -o main .
+    buildCommand: go build -tags netgo -ldflags '-s -w' -o main
     startCommand: ./main
     envVars:
       - key: PORT
