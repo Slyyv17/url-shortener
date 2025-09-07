@@ -33,9 +33,8 @@ __pycache__/
 Thumbs.db
 
 # Swagger docs generated
-/docs/*
-!docs/swagger.json
-!docs/swagger.yaml
+# Keep all swagger docs (json, yaml, and go files) in repo for Render
+!/docs/
 
 # Env files (keep secrets safe!)
 .env

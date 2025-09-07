@@ -1,8 +1,9 @@
 package main
 
 import (
+	"log"
 	"os"
-	_ "url-shortener/docs"
+	"url-shortener/docs"
 	"url-shortener/internal/controllers"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +17,17 @@ import (
 // @host localhost:8080
 // @BasePath /
 func main() {
+	// Auto-detect environment and set Swagger host
+	if os.Getenv("RENDER") != "" {
+		// Running on Render
+		docs.SwaggerInfo.Host = "byte-lite-be6i.onrender.com"
+		docs.SwaggerInfo.Schemes = []string{"https"}
+	} else {
+		// Running locally
+		docs.SwaggerInfo.Host = "localhost:8080"
+		docs.SwaggerInfo.Schemes = []string{"http"}
+	}
+	
 	r := gin.Default()
 	r.POST("/shorten", controllers.ShortenURL)
 	r.GET("/Bitly-lite/:code", controllers.Redirect)
@@ -25,10 +37,12 @@ func main() {
 	// Swagger route
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	// Start server
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
-
-	r.Run(":" + port)
+	if err := r.Run(":" + port); err != nil {
+		log.Fatal(err)
+	}
 }

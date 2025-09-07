@@ -27,7 +27,7 @@ func CreateShortURL( longUrl string) (*models.URL, error) {
 	url := &models.URL{
 		ID: shortCode,
 		LongURL: longUrl,
-		ShortURL: "http://localhost:8080/Bitly-lite/" + shortCode,
+		ShortURL: "https://byte-lite-be6i.onrender.com/Bitly-lite/" + shortCode,
 		CreatedAt: time.Now(),
 		Clicks: 0,
 	}
